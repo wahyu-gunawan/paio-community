@@ -22,9 +22,17 @@ export default function AdminLayout({
       try {
         const res = await fetch('/api/auth/check');
         if (res.ok) {
-          setIsAuthenticated(true);
-          if (isLoginPage) {
-            router.push('/admin');
+          const data = await res.json();
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+            if (isLoginPage) {
+              router.push('/admin');
+            }
+          } else {
+            setIsAuthenticated(false);
+            if (!isLoginPage) {
+              router.push('/admin/login');
+            }
           }
         } else {
           setIsAuthenticated(false);
